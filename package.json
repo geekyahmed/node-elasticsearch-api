@@ -1,0 +1,15 @@
+{
+  "name": "node-elasticsearch",
+  "version": "1.0.0",
+  "description": "An express API with Elasticsearch",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bankole Ahmed",
+  "license": "ISC",
+  "dependencies": {
+    "elasticsearch": "^16.7.3",
+    "express": "^4.18.1"
+  }
+}
