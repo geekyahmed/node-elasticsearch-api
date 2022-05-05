@@ -71,4 +71,33 @@ router.get('/products/:id', bodyParser, (req, res) => {
         })
 })
 
+// Updates a product
+router.get('/products/:id', bodyParser, (req, res) => {
+    let query = {
+        index: 'products',
+        id: req.params.id,
+        body: {
+            doc: req.body
+        }
+    }
+    elasticClient.update(query)
+        .then(resp => {
+            if (!resp)
+                return res.status(404).json({
+                    msg: 'Product not found',
+                    data: resp
+                })
+            return res.status(200).json({
+                msg: 'Product updated',
+                data: resp
+            })
+        })
+        .catch(err => {
+            return res.status(500).json({
+                msg: 'Error',
+                err
+            })
+        })
+})
+
 module.exports = router
