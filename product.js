@@ -1,4 +1,4 @@
-let product = [
+let products = [
     {
         "sku": 1,
         "name": "Product 1",

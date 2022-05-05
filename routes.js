@@ -1,6 +1,7 @@
 const express = require('express')
 const elastic = require('elasticsearch')
 const bodyParser = require('body-parser').json()
+const products = require('./product')
 
 const router = express.Router();
 
@@ -23,6 +24,31 @@ router.use((req, res, next) => {
             console.log(err)
         })
     next()
+})
+
+//Get all product
+router.get('/products', bodyParser, (req, res) => {
+    let query = {
+        index: 'products'
+    }
+    elasticClient.search(query)
+        .then(resp => {
+            if (!resp)
+                return res.status(404).json({
+                    msg: 'Product not found',
+                    data: resp
+                })
+            return res.status(200).json({
+                msg: 'Products retrieved',
+                data: resp.hits.hits
+            })
+        })
+        .catch(err => {
+            return res.status(500).json({
+                msg: 'Error',
+                err
+            })
+        })
 })
 
 //Creates a product
@@ -72,7 +98,7 @@ router.get('/products/:id', bodyParser, (req, res) => {
 })
 
 // Updates a product
-router.get('/products/:id', bodyParser, (req, res) => {
+router.put('/products/:id', bodyParser, (req, res) => {
     let query = {
         index: 'products',
         id: req.params.id,
@@ -99,5 +125,32 @@ router.get('/products/:id', bodyParser, (req, res) => {
             })
         })
 })
+
+//delete a product
+router.delete('/products/:id', bodyParser, (req, res) => {
+    let query = {
+        index: 'products',
+        id: req.params.id
+    }
+    elasticClient.get(query)
+        .then(resp => {
+            if (!resp)
+                return res.status(404).json({
+                    msg: 'Product not found',
+                    data: resp
+                })
+            return res.status(200).json({
+                msg: 'Product deleted',
+                data: resp
+            })
+        })
+        .catch(err => {
+            return res.status(500).json({
+                msg: 'Error',
+                err
+            })
+        })
+})
+
 
 module.exports = router
